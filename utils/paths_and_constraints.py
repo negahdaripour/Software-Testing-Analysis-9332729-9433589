@@ -1,7 +1,6 @@
 #from fuzzingbook.SymbolicFuzzer import SimpleSymbolicFuzze
 from fuzzingbook.SymbolicFuzzer import *
 import z3
-from utils.get_var_string_name import get_var_string_name
 
 
 class AdvancedSymbolicFuzzer(AdvancedSymbolicFuzzer):
@@ -68,7 +67,7 @@ def paths_and_constraints(f):
         for k in range(len(constr)):
             # get_var_string_name helper function takes a constraint as input
             # and generates the name of the variables to be used later for initializeing z3 symbolic variables
-            names = get_var_string_name(constr[k])
+            names = used_identifiers(constr[k])
             #dynamic variable initialization for z3
             for j in range(len(names)):
                 exec(names[j] + " = z3.Int('" + names[j] + "')")
