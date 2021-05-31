@@ -6,10 +6,8 @@ from graphviz import Source, Graph
 
 
 #from test_function import test_function
-from test_reassign import test_function_reassign
-from paths_and_constraints import paths_and_constraints
-from test_while import test_function_loop
-from gcd import gcd_f
+from utils.paths_and_constraints import paths_and_constraints
+from examples.gcd import gcd_f
 
 # initialzie Simple Symbolic Fuzzer
 sym_fuzzer = AdvancedSymbolicFuzzer(

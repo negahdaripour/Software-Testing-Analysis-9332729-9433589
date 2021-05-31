@@ -1,7 +1,7 @@
 #from fuzzingbook.SymbolicFuzzer import SimpleSymbolicFuzze
 from fuzzingbook.SymbolicFuzzer import *
 import z3
-from get_var_string_name import get_var_string_name
+from utils.get_var_string_name import get_var_string_name
 
 
 class AdvancedSymbolicFuzzer(AdvancedSymbolicFuzzer):
@@ -59,7 +59,7 @@ def paths_and_constraints(f):
     # and whether that path is satisfiable or not
     print("Result:")
     for i in range(len(paths)):
-        print(" Path: ", i)
+        print(" Path: ", i + 1)
         for step in printables[i]:
             print(step)
         s = z3.Solver()
