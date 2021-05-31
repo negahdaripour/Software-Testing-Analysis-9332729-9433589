@@ -9,7 +9,7 @@ def get_var_string_name(s):
             output.append(name)
         if "z3.Not" in l[i]:
             indx = l[i].find('Not')
-            name = l[i][indx+3:]    
+            name = l[i][indx+4:]    
             output.append(name)
         if "z3.And" in l[i]:
             indx = l[i].find('And')

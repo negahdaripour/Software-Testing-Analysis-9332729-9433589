@@ -18,7 +18,7 @@ class AdvancedSymbolicFuzzer(AdvancedSymbolicFuzzer):
             child_paths = self.get_completed_paths(child, depth + 1)
             for path in child_paths:
                 # In a conditional branch, idx is 0 for If, and 1 for Else
-                fnpaths.append([PNode(idx, fenter)] + path)
+                fnpaths.append([PNode(idx, fenter, order = idx)] + path)
         return fnpaths
 
     def get_all_paths_for_print(self, fenter, _depth=0):
