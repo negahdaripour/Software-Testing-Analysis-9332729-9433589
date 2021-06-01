@@ -7,11 +7,11 @@ from graphviz import Source, Graph
 
 #from test_function import test_function
 from utils.paths_and_constraints import paths_and_constraints
-from examples.gcd import gcd_f
+from examples.test_unsat_core import test_unsat_core
 
 # initialzie Simple Symbolic Fuzzer
 sym_fuzzer = AdvancedSymbolicFuzzer(
-   gcd_f,
+   test_unsat_core,
     max_tries = 10,
     max_iter = 10,
     max_depth =10
@@ -28,7 +28,7 @@ data = []
 for i in range(10):
     r = sym_fuzzer.fuzz()
     data.append((r['a'].as_long(), r['b'].as_long()))
-    v = gcd_f(*data[-1])
+    v = test_unsat_core(*data[-1])
     print(r, "Result", repr(v))
 
 print("Num of Data:", len(data))
@@ -38,15 +38,15 @@ print("Num of Data:", len(data))
 
 with ArcCoverage() as cov:
     for a, b in data:
-        gcd_f(a, b)
+        test_unsat_core(a, b)
 
 # generate and view Control Flow Graph 
-graph = Source(to_graph(gen_cfg(inspect.getsource(gcd_f)), arcs= cov.arcs()))
+graph = Source(to_graph(gen_cfg(inspect.getsource(test_unsat_core)), arcs= cov.arcs()))
 
 # insert unique filename and the desired directory to save the graph in pdf format
 #graph.view(filename="tf_8.gv", directory="E:\dir\graphs")
 
-paths_and_constraints(gcd_f)
+paths_and_constraints(test_unsat_core)
 
 
 

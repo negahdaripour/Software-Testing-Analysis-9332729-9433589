@@ -1,5 +1,5 @@
 #from fuzzingbook.SymbolicFuzzer import SimpleSymbolicFuzze
-from fuzzingbook.SymbolicFuzzer import *
+from utils.ModifiedSymbolicFuzzer import *
 import z3
 
 
@@ -76,6 +76,11 @@ def paths_and_constraints(f):
             indx = constr[k].find('Not')
             if(indx > 0):
                 single_constr = constr[k][:indx + 3] + '(' + constr[k][indx + 3:] + ')'
+
+            if '[' in single_constr:
+                single_constr = single_constr.replace('[','___')
+                single_constr = single_constr.replace(']', '')
+                
             f = eval(single_constr)
             print(single_constr)
             # the result of the eval is added to z3.Solver initialized earlier 
