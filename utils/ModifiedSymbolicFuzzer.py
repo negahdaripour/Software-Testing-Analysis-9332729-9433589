@@ -30,6 +30,16 @@
 
 # # Symbolic Fuzzing
 
+""" Symbolic Fuzzer
+
+    The additional codes or code modifications done to support 
+    taking a list on integers with the maximum length of 10 as
+    is marked by comments 
+    # Added code by Pariya
+    and
+    # end of
+"""
+
 if __name__ == "__main__":
     print('# Symbolic Fuzzing')
 
@@ -482,6 +492,7 @@ def used_identifiers(src):
         elif isinstance(astnode, ast.Subscript):
             s_name = astnode.value.id + "___" + str(astnode.slice.value.value)
             lst.append(s_name)
+        #end of
         elif isinstance(astnode, (ast.Num, ast.Str, ast.Tuple, ast.NameConstant)):
             pass
         elif isinstance(astnode, ast.Assign):
@@ -518,6 +529,7 @@ def translate_to_z3_name(v):
     #Added Code Here by Pariya
     if v == 'list':
         return 'z3.Int'
+    #end of
     else:
         return SYM_VARS_STR[v][0]
 
@@ -1000,7 +1012,7 @@ def rename_variables(astnode, env):
             list_item_name = astnode.id.replace('[', '_')
             list_item_name = list_item_name.replace(']','__')
             return ast.Name('_%s_%d' % (list_item_name, num), astnode.ctx)
-        # end
+        # end of
         return ast.Name('_%s_%d' % (astnode.id, num), astnode.ctx)
     elif isinstance(astnode, ast.Return):
         return ast.Return(rename_variables(astnode.value, env))
@@ -1204,6 +1216,7 @@ def to_single_assignment_predicates(path):
                 s_name = s_name.replace(']','__')
             target = ast.Name('_%s_%d' %
                               (s_name, env[assigned]), None)
+            # end of
             new_node = ast.Expr(ast.Compare(target, [ast.Eq()], val))
         elif isinstance(ast_node, ast.Assign):
             assigned = ast_node.targets[0].id
@@ -1216,7 +1229,7 @@ def to_single_assignment_predicates(path):
                 s_name = s_name.replace(']','__')
             target = ast.Name('_%s_%d' %
                               (s_name, env[assigned]), None)
-            # end
+            # end of
             new_node = ast.Expr(ast.Compare(target, [ast.Eq()], val))
         elif isinstance(ast_node, (ast.Return, ast.Pass)):
             new_node = None
@@ -1261,7 +1274,7 @@ def identifiers_with_types(identifiers, defined):
             assert name in defined
             typ = defined[name]
             with_types[i] = typ
-
+        # end of
     return with_types
 
 class AdvancedSymbolicFuzzer(AdvancedSymbolicFuzzer):
@@ -1300,7 +1313,7 @@ class AdvancedSymbolicFuzzer(AdvancedSymbolicFuzzer):
                     list_name = (iden[1:index])
                 list_names_indexes.append([list_name, list_index])
 
-
+        # end of
 
         for constr in constraints:
             if '[' in constr:
@@ -1677,6 +1690,7 @@ class AdvancedSymbolicFuzzer(AdvancedSymbolicFuzzer):
                 new = new.replace(']', '')
                 s2.remove(constr)
                 s2.insert(0, new)       
+        # end of
         exec("s.add(z3.And(%s))" % ','.join(s2), globals(), locals())
         return s.check() == z3.sat
 

@@ -1,10 +1,48 @@
-#from fuzzingbook.SymbolicFuzzer import SimpleSymbolicFuzze
+""" Utility Functions and Classes
+
+Additional Functions are defined for the AdvancedSymbolicFuzzer to be able to get 
+completed paths using dfs and to print the results, because the advanced fuzzer 
+generates executable paths.
+
+    Typical Usage Example:
+        paths_and_constraints(function)
+"""
+
 from utils.ModifiedSymbolicFuzzer import *
 import z3
 
 
 class AdvancedSymbolicFuzzer(AdvancedSymbolicFuzzer):
+    """ 
+    A class used to add functions to the original AdvancedSymbolicFuzzer class
+
+    Methods:
+        get_completed_paths(self, fenter, depth-0)
+            returns all paths from 'enter' to 'exit' for extracting constraints
+
+        get_all_paths_for_print(self, fenter, depth=0)
+            returns all paths from 'enter' to 'exit' in a readable format
+    """
+
     def get_completed_paths(self, fenter, depth=0):
+        """ Returns all paths from 'enter' to 'exit using DFS
+
+        If the argument 'depth' isn't passed in, the default is 0
+
+        Args:
+            fenter : graph node 
+                function entry point
+            depth : int, optional
+                the depth of recursion
+
+        Returns:
+            A list of nodes that build up the path
+
+        Raises:
+            Maximum depth exceeded
+                If maxmimum depth specified is exceeded
+        """
+
         if depth > self.max_depth:
             raise Exception('Maximum depth exceeded')
         if not fenter.children:
@@ -21,6 +59,24 @@ class AdvancedSymbolicFuzzer(AdvancedSymbolicFuzzer):
         return fnpaths
 
     def get_all_paths_for_print(self, fenter, _depth=0):
+        """ Returns all paths from 'enter' to 'exit using DFS
+
+        If the argument 'depth' isn't passed in, the default is 0
+
+        Ars:
+            fenter : 
+                function entry point
+            depth : int, optional
+                the depth of recursion
+
+        Returns:
+            A list of nodes of represent the path
+
+        Raises:
+            Maximum depth exceeded
+                If maxmimum depth specified is exceeded
+        """
+
         if _depth > self.max_depth:
             raise Exception('Maximum depth exceeded')
         if not fenter.children:
@@ -37,6 +93,15 @@ class AdvancedSymbolicFuzzer(AdvancedSymbolicFuzzer):
         return fnpaths
 
 def paths_and_constraints(f):
+    """ Prints all paths from 'enter' to 'exit', constraints of each path, whether path is sat or unsat
+
+    Parameters
+    ----------
+    f : function object
+        The function we want to explose
+
+    """
+
     sym_fuzzer = AdvancedSymbolicFuzzer(
         f, 
         max_tries = 10,
@@ -44,18 +109,12 @@ def paths_and_constraints(f):
         max_depth = 10
     )
 
-    # get_all_paths uses the graph to generate all the paths
-    # whether the paths are satisfiable or not
     paths = sym_fuzzer.get_completed_paths(sym_fuzzer.fnenter)
     printables = sym_fuzzer.get_all_paths_for_print(sym_fuzzer.fnenter)
 
     print("Num of Completed Paths:", len(paths))
     print("Num of Printable Paths:", len(printables))
 
-    # in the following nested loops, we print each of the paths
-    # their corresponding constraints
-    # the result of an attemtp at solving the constraints
-    # and whether that path is satisfiable or not
     print("Result:")
     for i in range(len(paths)):
         print(" Path: ", i + 1)
@@ -65,13 +124,11 @@ def paths_and_constraints(f):
         constr = sym_fuzzer.extract_constraints(paths[i])
         print("Constraints: \t:" , constr)
         for k in range(len(constr)):
-            # get_var_string_name helper function takes a constraint as input
-            # and generates the name of the variables to be used later for initializeing z3 symbolic variables
             names = used_identifiers(constr[k])
-            #dynamic variable initialization for z3
+            
             for j in range(len(names)):
                 exec(names[j] + " = z3.Int('" + names[j] + "')")
-            # python eval takes a constraint in the form of an string as input and evaluates it
+            
             single_constr = constr[k]
             indx = constr[k].find('Not')
             if(indx > 0):
@@ -82,9 +139,6 @@ def paths_and_constraints(f):
                 single_constr = single_constr.replace(']', '')
                 
             f = eval(single_constr)
-            print(single_constr)
-            # the result of the eval is added to z3.Solver initialized earlier 
             s.add(f)
-        #print(s)
         print(s.check())
 
