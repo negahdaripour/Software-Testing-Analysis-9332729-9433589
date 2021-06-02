@@ -13,6 +13,7 @@ Imported Function 'paths_and_constraints' is called to print the paths and their
 
 This program first calls the imported function, 'main' and turns the for loop into a while
 loop, we then import the generated function and continue fuzzing. 
+
 """
 
 from fuzzingbook.ConcolicFuzzer import ArcCoverage
@@ -21,13 +22,13 @@ from fuzzingbook.ControlFlow import PyCFG, CFGNode, to_graph, gen_cfg
 import inspect
 from graphviz import Source, Graph
 
-if __name__ == "__main__":
+def symbolic_fuzzer_for_loop():
     from utils.paths_and_constraints import paths_and_constraints
-    from utils.fuzzer_utils import main
+    from utils.fuzzer_utils import apply
 
-    main()
+    apply()
 
-    from examples.converted_functions import for_test_function
+    from utils.converted_functions import for_test_function
 
     sym_fuzzer = AdvancedSymbolicFuzzer(
         for_test_function,
@@ -44,14 +45,12 @@ if __name__ == "__main__":
         v = for_test_function(*data[-1])
         print(r, "Result", repr(v))
 
-    print("Num of Data:", len(data))
-
     with ArcCoverage() as cov:
         for a, b in data:
             for_test_function(a, b)
 
     graph = Source(to_graph(gen_cfg(inspect.getsource(for_test_function)), arcs= cov.arcs()))
-    graph.view(filename="tf_12.gv", directory="E:\dir\graphs")
+    #graph.view(filename="tf_12.gv", directory="E:\dir\graphs")
 
     paths_and_constraints(for_test_function)
 

@@ -19,9 +19,9 @@ import inspect
 from graphviz import Source, Graph
 
 from utils.paths_and_constraints import paths_and_constraints
-from examples.gcd import gcd_f
+from input_functions.gcd import gcd_f
 
-if __name__ == "__main__":
+def symbolic_fuzzer():
     sym_fuzzer = AdvancedSymbolicFuzzer(
     gcd_f,
         max_tries = 10,

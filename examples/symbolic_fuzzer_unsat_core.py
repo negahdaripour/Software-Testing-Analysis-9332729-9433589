@@ -22,34 +22,36 @@ from graphviz import Source, Graph
 
 
 from utils.paths_and_constraints import paths_and_constraints
-from examples.test_unsat_core import test_unsat_core
-
-sym_fuzzer = AdvancedSymbolicFuzzer(
-   test_unsat_core,
-    max_tries = 10,
-    max_iter = 10,
-    max_depth =10
-)
+from input_functions.test_unsat_core import test_unsat_core
 
 
-data = []
+def symbolic_fuzzer_unsat_core():
+    sym_fuzzer = AdvancedSymbolicFuzzer(
+    test_unsat_core,
+        max_tries = 10,
+        max_iter = 10,
+        max_depth =10
+    )
 
-for i in range(10):
-    r = sym_fuzzer.fuzz()
-    data.append((r['a'].as_long(), r['b'].as_long()))
-    v = test_unsat_core(*data[-1])
-    print(r, "Result", repr(v))
 
-print("Num of Data:", len(data))
+    data = []
 
-with ArcCoverage() as cov:
-    for a, b in data:
-        test_unsat_core(a, b)
+    for i in range(10):
+        r = sym_fuzzer.fuzz()
+        data.append((r['a'].as_long(), r['b'].as_long()))
+        v = test_unsat_core(*data[-1])
+        print(r, "Result", repr(v))
 
-graph = Source(to_graph(gen_cfg(inspect.getsource(test_unsat_core)), arcs= cov.arcs()))
-#graph.view(filename="tf_8.gv", directory="E:\dir\graphs")
+    print("Num of Data:", len(data))
 
-paths_and_constraints(test_unsat_core)
+    with ArcCoverage() as cov:
+        for a, b in data:
+            test_unsat_core(a, b)
+
+    graph = Source(to_graph(gen_cfg(inspect.getsource(test_unsat_core)), arcs= cov.arcs()))
+    #graph.view(filename="tf_8.gv", directory="E:\dir\graphs")
+
+    paths_and_constraints(test_unsat_core)
 
 
 

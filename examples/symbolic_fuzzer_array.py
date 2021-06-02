@@ -21,10 +21,10 @@ import inspect
 from graphviz import Source, Graph
 
 from utils.paths_and_constraints import paths_and_constraints
-from examples.array_test import test_function
+from input_functions.array_test import test_function
 
 
-if __name__ == "__main__":
+def symbolic_fuzzer_array():
     sym_fuzzer = AdvancedSymbolicFuzzer(
         test_function,
         max_tries = 10,
@@ -44,10 +44,8 @@ if __name__ == "__main__":
                     b.append(j.as_long())
             data.append((r['a'].as_long(),b))        
             v = test_function(*data[-1])
-            print(r, "Result", repr(v))
+            print('a: ', r['a'], '\t,b: ', b, "\tResult", repr(v))
         
-        
-    print("Num of Data:", len(data))
 
     with ArcCoverage() as cov:
         for a, b in data:

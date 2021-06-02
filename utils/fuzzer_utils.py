@@ -44,7 +44,7 @@ def loopconverter(fn):
     new_source = ""
     for line in lines[0]:
        new_source = new_source + replace_for(line)
-    with open('E:\git\Software-Testing-Analysis-9332729-9433589\examples\converted_functions.py', 'a') as f:
+    with open('converted_functions.py', 'a') as f:
         f.write(new_source)   
     code = compile(new_source,'<string>', 'exec')
     return  types.FunctionType(code.co_consts[1], globals())
@@ -58,6 +58,6 @@ def for_test_function(a: int,b: int) -> int:
     return "No End"
         
         
-def main():
+def apply():
     loopconverter(for_test_function)
     
