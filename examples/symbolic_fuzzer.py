@@ -22,6 +22,12 @@ from utils.paths_and_constraints import paths_and_constraints
 from input_functions.gcd import gcd_f
 
 def symbolic_fuzzer():
+    """Prints fuzzing data and genertes Control Flow Graph
+
+    Args: 
+        None
+    """
+
     sym_fuzzer = AdvancedSymbolicFuzzer(
     gcd_f,
         max_tries = 10,

@@ -23,6 +23,12 @@ import inspect
 from graphviz import Source, Graph
 
 def symbolic_fuzzer_for_loop():
+    """Prints fuzzing data and genertes Control Flow Graph
+
+    Args: 
+        None
+    """
+    
     from utils.paths_and_constraints import paths_and_constraints
     from utils.fuzzer_utils import apply
 

@@ -26,6 +26,12 @@ from input_functions.test_unsat_core import test_unsat_core
 
 
 def symbolic_fuzzer_unsat_core():
+    """Prints fuzzing data and genertes Control Flow Graph
+
+    Args: 
+        None
+    """
+    
     sym_fuzzer = AdvancedSymbolicFuzzer(
     test_unsat_core,
         max_tries = 10,
