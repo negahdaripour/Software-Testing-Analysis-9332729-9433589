@@ -31,25 +31,32 @@ data = []
 
 for i in range(10):
     r = sym_fuzzer.fuzz()
-    #data.append((r['a'].as_long(), r['b'].as_long()))
-    #v = test_function(*data[-1])
-    #print(r, "Result", repr(v))
-    print(r)
+    
+    if type(r['b']) == list:
+        b = []
+        for j in r['b']:
+            if j != None:
+                b.append(j.as_long())
+        data.append((r['a'].as_long(),b))        
+        v = test_function(*data[-1])
+        print(r, "Result", repr(v))
+    
+    
 
-#print("Num of Data:", len(data))
+print("Num of Data:", len(data))
 
 # we use arcCoverage as a tracer that uses data generated
 # to determine how much of the paths have been taken
 
-#with ArcCoverage() as cov:
-#    for a, b in data:
-#        test_function(a, b)
+with ArcCoverage() as cov:
+    for a, b in data:
+        test_function(a, b)
 
 # generate and view Control Flow Graph 
-#graph = Source(to_graph(gen_cfg(inspect.getsource(test_function)), arcs= cov.arcs()))
+graph = Source(to_graph(gen_cfg(inspect.getsource(test_function)), arcs= cov.arcs()))
 
 # insert unique filename and the desired directory to save the graph in pdf format
-#graph.view(filename="tf_9.gv", directory="E:\dir\graphs")
+graph.view(filename="tf_10.gv", directory="E:\dir\graphs")
 
 paths_and_constraints(test_function)
 

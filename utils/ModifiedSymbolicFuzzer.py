@@ -1327,7 +1327,6 @@ class AdvancedSymbolicFuzzer(AdvancedSymbolicFuzzer):
                 return {} # <- unsat
             m = self.z3.model()
             solutions = {d.name(): m[d] for d in m.decls()}
-            print(solutions, "-----------------------------------------------------------Solutions")
 
             for k in lists_in_parameters:
                 element = k[0] + "___" + k[1]
